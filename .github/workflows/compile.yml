@@ -27,10 +27,15 @@ jobs:
             esphome compile "$f"
           done
 
+      - name: Advanced Copy for C3
+        run: |
+          mkdir -p final_output
+          # 深度搜索所有的 bin 文件并集中复制过来
+          find .esphome/build/ -name "*.bin" -exec cp {} ./final_output/ \; || true
+          ls -la ./final_output
+
       - name: Upload BIN Artifact
         uses: actions/upload-artifact@v4
         with:
           name: esphome-bin-files
-          path: |
-            .esphome/build/*/.pioenvs/*/*.bin
-            .esphome/build/*/firmware*.bin
+          path: final_output/*
