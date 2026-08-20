@@ -24,12 +24,12 @@ ota:
 
 output:
   - platform: ledc
-    pin: GPIO25
+    pin: GPIO4
     id: fan_pwm
     frequency: 25kHz
 
   - platform: gpio
-    pin: GPIO26
+    pin: GPIO5
     id: swing_pin
 
 fan:
