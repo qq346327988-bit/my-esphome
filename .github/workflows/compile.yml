@@ -1,0 +1,29 @@
+name: Compile ESPHome BIN
+on:
+  push:
+    paths:
+      - '*.yaml'
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - name: Install ESPHome
+        run: pip install esphome
+      - name: Compile Dashboard
+        run: |
+          for f in *.yaml; do
+            esphome compile "$f"
+            cp .esphome/build/*/firmware.bin "./${f%.yaml}.bin" || cp .esphome/build/*/.pioenvs/*/firmware.bin "./${f%.yaml}.bin" || true
+          done
+      - name: Upload BIN Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: esphome-bin-files
+          path: "*.bin"
