@@ -7,6 +7,9 @@ esp32:
   framework:
     type: arduino
 
+# 必须包含这一行，HA 才能正常连接板子
+api:
+
 wifi:
   ssid: "诗2013"
   password: "Zhao8802wo"
