@@ -25,14 +25,12 @@ jobs:
         run: |
           for f in *.yaml; do
             esphome compile "$f"
-            # 兼容 ESP32-C3 等新芯片的固件路径查找
-            mkdir -p ./output_bins
-            find .esphome/build/ -name "firmware.bin" -exec cp {} ./output_bins/ \; || true
-            find .esphome/build/ -name "firmware-factory.bin" -exec cp {} ./output_bins/ \; || true
           done
 
       - name: Upload BIN Artifact
         uses: actions/upload-artifact@v4
         with:
           name: esphome-bin-files
-          path: "output_bins/*"
+          path: |
+            .esphome/build/*/.pioenvs/*/*.bin
+            .esphome/build/*/firmware*.bin
