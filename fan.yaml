@@ -1,11 +1,14 @@
 esphome:
   name: dc-fan
-  friendly_name: "我的风扇"
+  friendly_name: "智能风扇"
 
 esp32:
   board: esp32-c3-devkitm-1
   framework:
-    type: arduino
+    type: esp-idf
+
+# 开启蓝牙和网络基础组件，HomeKit 必须
+esp32_ble:
 
 wifi:
   ssid: "诗2013"
@@ -18,10 +21,13 @@ captive_portal:
 
 logger:
 
+mdns:
+
 ota:
   - platform: esphome
     password: "admin"
 
+# 硬件引脚输出配置
 output:
   - platform: ledc
     pin: GPIO4
@@ -32,6 +38,7 @@ output:
     pin: GPIO5
     id: swing_pin
 
+# 风扇核心组件
 fan:
   - platform: speed
     id: my_fan
@@ -39,3 +46,11 @@ fan:
     output: fan_pwm
     oscillation_output: swing_pin
     speed_count: 100
+
+# 原生 Apple HomeKit 绑定组件
+homekit:
+  name: "智能风扇"
+  # 这是你的苹果家庭配对码，格式必须为 XXX-XX-XXX
+  pin: "123-45-678"
+  model: "ESPHome Fan"
+  manufacturer: "DIYer"
