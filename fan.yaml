@@ -1,0 +1,39 @@
+esphome:
+  name: dc-fan
+  friendly_name: 我的风扇
+
+esp32:
+  board: esp32-c3-devkitm-1
+  framework:
+    type: arduino
+
+wifi:
+  ssid: “诗2013”
+  password: “Zhao8802wo”
+  ap:
+    ssid: "Fan-Setup"
+    password: "12345678"
+
+captive_portal:
+logger:
+ota:
+
+matter:
+
+output:
+  - platform: ledc
+    pin: GPIO25
+    id: fan_pwm
+    frequency: 25000 Hz
+
+  - platform: gpio
+    pin: GPIO26
+    id: swing_pin
+
+fan:
+  - platform: speed
+    id: my_fan
+    name: "风扇"
+    output: fan_pwm
+    oscillation_output: swing_pin
+    speed_count: 100
