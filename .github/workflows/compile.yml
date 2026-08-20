@@ -1,41 +1,38 @@
-esphome:
-  name: dc-fan
-  friendly_name: "我的风扇"
+name: Compile ESPHome BIN
 
-esp32:
-  board: esp32-c3-devkitm-1
-  framework:
-    type: arduino
+on:
+  push:
+    paths:
+      - '*.yaml'
+  workflow_dispatch:
 
-wifi:
-  ssid: "诗2013"
-  password: "Zhao8802wo"
-  ap:
-    ssid: "Fan-Setup"
-    password: "12345678"
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-captive_portal:
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
 
-logger:
+      - name: Install ESPHome
+        run: pip install esphome
 
-ota:
-  - platform: esphome
-    password: "admin"
+      - name: Compile Dashboard
+        run: |
+          for f in *.yaml; do
+            esphome compile "$f"
+            # 兼容 ESP32-C3 等新芯片的固件路径查找
+            mkdir -p ./output_bins
+            find .esphome/build/ -name "firmware.bin" -exec cp {} ./output_bins/ \; || true
+            find .esphome/build/ -name "firmware-factory.bin" -exec cp {} ./output_bins/ \; || true
+          done
 
-output:
-  - platform: ledc
-    pin: GPIO4
-    id: fan_pwm
-    frequency: 25kHz
-
-  - platform: gpio
-    pin: GPIO5
-    id: swing_pin
-
-fan:
-  - platform: speed
-    id: my_fan
-    name: "风扇"
-    output: fan_pwm
-    oscillation_output: swing_pin
-    speed_count: 100
+      - name: Upload BIN Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: esphome-bin-files
+          path: "output_bins/*"
