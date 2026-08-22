@@ -1,9 +1,9 @@
 esphome:
-  name: dc-fan
-  friendly_name: "我的风扇"
+  name: da-fan1
+  friendly_name: "客厅风扇"
 
 esp32:
-  board: esp32-c3-devkitm-1
+  board: esp32-c3-devkitm-2
   framework:
     type: arduino
 
@@ -14,7 +14,7 @@ wifi:
   ssid: "诗2013"
   password: "Zhao8802wo"
   ap:
-    ssid: "Fan-Setup"
+    ssid: "Fan-Setup1"
     password: "12345678"
 
 captive_portal:
