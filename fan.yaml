@@ -3,7 +3,7 @@ esphome:
   friendly_name: "客厅风扇"
 
 esp32:
-  board: esp32-c3-devkitm-2
+  board: esp32-c3-devkitm-1
   framework:
     type: arduino
 
